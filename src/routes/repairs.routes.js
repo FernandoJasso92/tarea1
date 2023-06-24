@@ -1,17 +1,26 @@
 const express = require('express');
 const repairController = require('./../controllers/repairs.controller');
 
-const router = express.Router()
+//middlewares
+const validationMiddleware = require('./../middlewares/validations.middleware');
+const repairMiddleware = require('./../middlewares/repair.middlewarre');
+const authMiddleware = require('./../middlewares/auth.middleware');
 
-//TODO: DEFINIR ENDPOINTS
-router.route('/')
-.get(repairController.findAllRepair)
-.post(repairController.create);
+const router = express.Router();
+
+router.use(authMiddleware.protect);
 
 router
-.route('/:id')
-.get(repairController.findRepair)
-.patch(repairController.update)
-.delete(repairController.delete);
+  .route('/')
+  .get(authMiddleware.restrictTo('employee'), repairController.findAllRepair)
+  .post(validationMiddleware.createRepairValidation, repairController.create);
+
+router
+  .use('/:id', repairMiddleware.existRepair)
+  .use(authMiddleware.restrictTo('employee'))
+  .route('/:id')
+  .get(repairController.findRepair)
+  .patch(repairController.update)
+  .delete(repairController.delete);
 
 module.exports = router;

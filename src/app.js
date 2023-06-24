@@ -1,9 +1,9 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 
 //routes
-const userRouter = require('./routes/user.routes')
-const repairRouter = require('./routes/repairs.routes')
+const userRouter = require('./routes/user.routes');
+const repairRouter = require('./routes/repairs.routes');
 
 const app = express();
 

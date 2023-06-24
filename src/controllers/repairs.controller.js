@@ -22,9 +22,9 @@ exports.findAllRepair = async (req, res) => {
 };
 exports.create = async (req, res) => {
   try {
-    const { date, userId } = req.body;
+    const { date, userId, description, motorsNumber } = req.body;
 
-    const repair = await Repair.create({ date, userId });
+    const repair = await Repair.create({ date, userId, description, motorsNumber });
 
     return res.status(200).json({
       status: 'success',
@@ -40,21 +40,7 @@ exports.create = async (req, res) => {
 };
 exports.findRepair = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const repair = await Repair.findOne({
-      where: {
-        id,
-        status: 'pending',
-      },
-    });
-
-    if (!repair) {
-      return res.status(404).json({
-        status: 'error',
-        message: `repair with id: ${id} not found`,
-      });
-    }
+    const { repair } = req;
 
     return res.status(200).json({
       status: 'success',
@@ -70,22 +56,8 @@ exports.findRepair = async (req, res) => {
 };
 exports.update = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    const repair = await Repair.findOne({
-      where: {
-        id,
-        status: 'pending',
-      },
-    });
-
-    if (!repair) {
-      return res.status(404).json({
-        status: 'error',
-        message: `repair with id: ${id} not found`,
-      });
-    }
+    const { repair } = req;
+    //const { status } = req.body;
 
     await repair.update({ status: 'completed' });
 
@@ -103,28 +75,14 @@ exports.update = async (req, res) => {
 };
 exports.delete = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    const repair = await Repair.findOne({
-      where: {
-        id,
-        status: 'pending',
-      },
-    });
-
-    if (!repair) {
-      return res.status(404).json({
-        status: 'error',
-        message: `repair with id: ${id} not found`,
-      });
-    }
+    const { repair } = req;
+    //const { status } = req.body;
 
     await repair.update({ status: 'cancelled' });
 
     return res.status(200).json({
       status: 'success',
-      message: 'repair deleted,'
+      message: 'repair deleted,',
     });
   } catch (error) {
     console.log(error);
